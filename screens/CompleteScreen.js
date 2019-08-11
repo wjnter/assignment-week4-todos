@@ -10,7 +10,7 @@ export default function CompleteScreen() {
 }
 
 CompleteScreen.navigationOptions = {
-  header: null
+  title: 'Complete todos'
 };
 
 const styles = StyleSheet.create({

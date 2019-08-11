@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { PureComponent } from 'react';
 import {
   Text,
   View,
@@ -12,10 +12,10 @@ import {
 } from 'react-native';
 import { TODOS } from '../utils/data.js';
 
-const TodoItem = props => {
+const TodoItem = ({todo, onToggleTodo, onDeleteTodo, idx}) => {
 
   const statusStyle = {
-    backgroundColor: props.todo.status === 'Done' ? 'blue' : 'green'
+    backgroundColor: todo.status === 'Done' ? 'blue' : 'green'
   };
 
   const onLongPress = todo => {
@@ -32,7 +32,7 @@ const TodoItem = props => {
         {
           text: 'OK', onPress: () => {
             console.log('deleted')
-            props.onDeleteTodo(todo.id)
+            onDeleteTodo(idx)
           }
         }
       ],
@@ -40,29 +40,29 @@ const TodoItem = props => {
     );
   };
 
+  const onHandleLongPress = todo => () => onLongPress(todo)
+  const onHandleToggleTodo = id => () => onToggleTodo(id)
+
   return (
     <TouchableOpacity
-      key={props.todo.body}
+      key={todo.body}
       style={[styles.todoItem, statusStyle]}
-      onLongPress={() => onLongPress(props.todo)}
-      onPress={() => props.onToggleTodo(props.todo.id)}
+      onLongPress={onHandleLongPress(todo)}
+      onPress={onHandleToggleTodo(todo.id)}
     >
       <Text style={styles.todoText}>
-        {props.idx + 1}: {props.todo.body}
+      {idx + 1}: {todo.body}
       </Text>
     </TouchableOpacity>
   );
 };
 
-export default class AllScreen extends React.Component {
+export default class AllScreen extends PureComponent {
   /* const [todoList, setTodoList] = useState(TODOS);
   const [todoBody, setTodoBody] = useState(''); */
-  constructor(props) {
-    super(props)
-    this.state = {
-      todoList: TODOS,
-      todoBody: ''
-    }
+  state = {
+    todoList: TODOS,
+    todoBody: ''
   }
   onToggleTodo = id => {
     let { todoList } = this.state
@@ -77,13 +77,13 @@ export default class AllScreen extends React.Component {
       this.props.navigation.navigate('SingleTodo', {
         updatedTodo: todo
       });
-    }, 1000);
+    }, 500);
   };
 
   onDeleteTodo = id => {
-    const newTodoList = this.state.todoList.filter(todo => todo.id !== id);
-    console.log('new todo list', newTodoList)
-    this.setState({ todoList: newTodoList })
+    this.setState(prevState => ({
+      todoList: prevState.todoList.filter(todo => todo.id !== id)
+    }))
   };
 
   onSubmitTodo = () => {
@@ -98,7 +98,17 @@ export default class AllScreen extends React.Component {
     this.setState({ todoList: newTodoList, todoBody: '' })
 
   };
+
+  todoItem = (todo, idx) => (<TodoItem
+    idx={idx}
+    todo={todo}
+    key={todo.body}
+    onToggleTodo={this.onToggleTodo}
+    onDeleteTodo={this.onDeleteTodo}
+  />)
+
   render() {
+    const {todoList} = this.state
     return (
       <ImageBackground style={styles.container} source={require('../assets/background.png')}>
         <KeyboardAvoidingView
@@ -108,15 +118,7 @@ export default class AllScreen extends React.Component {
         >
           <ScrollView style={{ flex: 1 }}>
             <View style={{ marginTop: '150%' }}>
-              {TODOS.map((todo, idx) => {
-                return (<TodoItem
-                  key={todo.body}
-                  todo={todo}
-                  idx={idx}
-                  onToggleTodo={this.onToggleTodo}
-                  onDeleteTodo={this.onDeleteTodo}
-                />)
-              })}
+              {todoList.map(this.todoItem)}
               <View style={styles.inputContainer}>
                 <TextInput
                   value={this.state.todoBody}

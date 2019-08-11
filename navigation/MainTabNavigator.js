@@ -41,7 +41,7 @@ const AllStack = createStackNavigator(
 );
 
 AllStack.navigationOptions = {
-  tabBarLabel: 'Complete',
+  tabBarLabel: 'All',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -60,7 +60,7 @@ const ActiveStack = createStackNavigator(
 );
 
 ActiveStack.navigationOptions = {
-  tabBarLabel: 'Complete',
+  tabBarLabel: 'Active',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
