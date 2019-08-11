@@ -6,6 +6,7 @@ import TabBarIcon from '../components/TabBarIcon';
 import CompleteScreen from '../screens/CompleteScreen';
 import AllScreen from '../screens/AllScreen';
 import ActiveScreen from '../screens/ActiveScreen';
+import SingleTodoScreen from '../screens/SingleTodoScreen';
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -34,38 +35,45 @@ CompleteStack.path = '';
 const AllStack = createStackNavigator(
   {
     All: AllScreen,
+    SingleTodo: SingleTodoScreen
   },
   config
 );
 
 AllStack.navigationOptions = {
-  tabBarLabel: 'All',
+  tabBarLabel: 'Complete',
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'} />
-  ),
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? 'ios-done-all' : 'md-link'}
+    />
+  )
 };
 
 AllStack.path = '';
 
 const ActiveStack = createStackNavigator(
   {
-    Active: ActiveScreen,
+    Active: ActiveScreen
   },
   config
 );
 
 ActiveStack.navigationOptions = {
-  tabBarLabel: 'Active',
+  tabBarLabel: 'Complete',
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'} />
-  ),
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? 'ios-done-all' : 'md-link'}
+    />
+  )
 };
 
 ActiveStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
-  CompleteStack,
   AllStack,
+  CompleteStack,
   ActiveStack,
 });
 

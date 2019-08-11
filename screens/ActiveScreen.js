@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 
-export default function CompleteScreen() {
+export default function ActiveScreen() {
   return (
     <View style={styles.container}>
       <Text>Active Screen</Text>
